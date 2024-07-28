@@ -29,7 +29,7 @@ RPMRELEASE := $(RELEASE)%{dist}
 # We follow OBS way for openSUSE, because there is no %{dist}
 # macro defined and there are no recommendations for packaging
 # without OBS.
-ifeq ($(shell rpm -E "%{is_opensuse}"),1)
+ifeq ($(shell rpm -E "%{suse_version}"),1500)
 	ifeq ($(shell rpm -E "%{sle_version}"),150000)
 		RPMDIST := lp150
 	endif
@@ -39,6 +39,24 @@ ifeq ($(shell rpm -E "%{is_opensuse}"),1)
 	ifeq ($(shell rpm -E "%{sle_version}"),150200)
 		RPMDIST := lp152
 	endif
+	ifeq ($(shell rpm -E "%{sle_version}"),150300)
+		RPMDIST := lp153
+	endif
+	ifeq ($(shell rpm -E "%{sle_version}"),150400)
+		RPMDIST := lp154
+	endif
+	ifeq ($(shell rpm -E "%{sle_version}"),150500)
+		RPMDIST := lp155
+	endif
+	ifeq ($(shell rpm -E "%{sle_version}"),150600)
+		RPMDIST := lp156
+	endif
+	RPMRELEASE := $(RPMDIST).$(RELEASE).1
+endif
+
+ifeq ($(shell rpm -E "%{suse_version}"),1600)
+	# tmp placeholder
+	RPMDIST := lp16x
 	RPMRELEASE := $(RPMDIST).$(RELEASE).1
 endif
 
