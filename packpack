@@ -59,9 +59,9 @@ if [ -z "${DOCKER_IMAGE}" ]; then
         DOCKER_IMAGE=ubuntu-xenial
     fi
 
-    if [ "${ARCH}" != "x86_64" ]; then
-        DOCKER_IMAGE="${DOCKER_IMAGE}-${ARCH}"
-    fi
+#     if [ "${ARCH}" != "x86_64" ]; then
+#         DOCKER_IMAGE="${DOCKER_IMAGE}-${ARCH}"
+#     fi
 fi
 
 version() {
@@ -206,6 +206,7 @@ if [ -z "$USE_LOCAL_IMAGE" ]; then
     docker pull ${DOCKER_REPO}:${DOCKER_IMAGE}
 fi
 docker run \
+        --platform=linux/${ARCH} \
         ${PACKPACK_EXTRA_DOCKER_RUN_PARAMS} \
         --volume "${PACKDIR}:/pack:ro" \
         --volume "${SOURCEDIR}:/source:ro" \
@@ -219,7 +220,7 @@ docker run \
         -e TMPDIR=/tmp \
         --volume "${CACHE_DIR}:/cache" \
         ${DOCKER_REPO}:${DOCKER_IMAGE} \
-        make -f /pack/Makefile -C /source BUILDDIR=/build -j "$@"
+        make -f /pack/Makefile -C /source BUILDDIR=/build -j$(nproc) "$@"
 retcode=$?
 rm -f ${BUILDDIR}/userwrapper.sh ${BUILDDIR}/env
 exit $retcode
